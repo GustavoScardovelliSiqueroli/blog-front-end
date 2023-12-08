@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="center-div">
+    <div class="centerh-div">
+      <h2>Pessoas</h2>
+    </div>
+
+    <table>
+      <thead>
+        <th>Nomes</th>
+      </thead>
+      <tbody id="tbody">
+        <!-- Seus dados da tabela aqui -->
+      </tbody>
+    </table>
+  </div>
+  <a class="space" href="register.html">Register</a>
+  <a class="space" href="viewpessoas.html">Ver pessoas</a>
+  <script>
+    let objeto = null;
+    const nameimput = document.querySelector("#id1");
+    const statusimput = document.querySelector("#id2");
+    loadDoc();
+
+    function loadDoc() {
+      const minhaUrl = "http://localhost:5000/people"
+      var resp;
+
+      fetch(minhaUrl)
+        .then(response => response.json())
+        .then(data => {
+
+          console.log(data);
+          resp = (data);
+
+          tbody = document.getElementById('tbody');
+          clearTable();
+          for (let i = 0; i < resp.names.length; i++) {
+            let tr = tbody.insertRow();
+
+            let td_name = tr.insertCell();
+
+            td_name.innerText = resp.names[i];
+            // td_status.innerText = resp[i].status;
+
+            // if (resp[i].status == "Negativo") {
+            //   console.log("Negativo!")
+            //   tr.style.background = "red";
+            // }
+            // if (resp[i].status == "Suspeito") {
+            //   console.log("Suspeito!")
+            //   tr.style.background = "orange";
+            // }
+            // if (resp[i].status == "Positivo") {
+            //   console.log("Positivo!")
+            //   tr.style.background = "green";
+            // }
+            // if (resp[i].status == "Sem avaliação") {
+            //   console.log("Sem avaliação!")
+            //   tr.style.background = "grey";
+            // }
+
+            // let imgGrey = document.createElement('img');
+            // imgGrey.src = 'edit.png';
+            // imgGrey.width = 30;
+            // imgGrey.height = 30;
+            // imgGrey.style.backgroundColor = "grey";
+            // imgGrey.classList.add('button-image')
+
+            // let objGrey = { "id": resp[i].id, "nome": resp[i].nome, "status": resp[i].status, "color": "grey" }
+            // imgGrey.setAttribute("onclick", "change(" + JSON.stringify(objGrey) + ")");
+
+            // td_acoes.appendChild(imgGrey);
+
+
+            // let imgRed = document.createElement('img');
+            // imgRed.src = 'edit.png';
+            // imgRed.width = 30;
+            // imgRed.height = 30;
+            // imgRed.style.backgroundColor = "red";
+            // imgRed.classList.add('button-image');
+
+            // let objRed = { "id": resp[i].id, "nome": resp[i].nome, "status": resp[i].status, "color": "red" }
+            // imgRed.setAttribute("onclick", "change(" + JSON.stringify(objRed) + ")")
+
+            // td_acoes.appendChild(imgRed);
+
+
+            // let imgOrange = document.createElement('img');
+            // imgOrange.src = 'edit.png';
+            // imgOrange.width = 30;
+            // imgOrange.height = 30;
+            // imgOrange.style.backgroundColor = "orange";
+            // imgOrange.classList.add('button-image');
+
+            // let objOrange = { "id": resp[i].id, "nome": resp[i].nome, "status": resp[i].status, "color": "orange" }
+            // imgOrange.setAttribute("onclick", "change(" + JSON.stringify(objOrange) + ")")
+
+            // td_acoes.appendChild(imgOrange);
+
+            // let imgGreen = document.createElement('img');
+            // imgGreen.src = 'edit.png';
+            // imgGreen.width = 30;
+            // imgGreen.height = 30;
+            // imgGreen.style.backgroundColor = "green";
+            // imgGreen.classList.add('button-image');
+
+            // let objGreen = { "id": resp[i].id, "nome": resp[i].nome, "status": resp[i].status, "color": "green" }
+            // imgGreen.setAttribute("onclick", "change(" + JSON.stringify(objGreen) + ")")
+
+            // td_acoes.appendChild(imgGreen);
+
+
+          }
+
+
+        })
+    }
+
+    function change(obj) {
+      const buttonImages = document.querySelectorAll('.button-image');
+
+
+
+      console.log(obj);
+      objeto = obj;
+
+      tbody = document.getElementById('tbody2');
+
+      nameimput.value = obj.nome;
+      statusimput.value = obj.status;
+      send();
+
+    }
+
+    async function send() {
+
+      let url = "http://localhost:3000/post";
+      console.log(objeto);
+      objeto.nome = nameimput.value;
+      objeto.status = statusimput.value;
+      console.log(objeto);
+
+      await fetch('http://localhost:3000/post', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(objeto)
+      })
+        .then(data => {
+          console.log(data);
+          // Após a conclusão bem-sucedida da postagem, atualize os dados da tabel
+          loadDoc(); // Isso irá buscar os novos dados e recriar a tabela
+        })
+        .catch(err => console.error(err))
+    }
+    function clearTable() {
+      const tbody = document.getElementById('tbody');
+      while (tbody.firstChild) {
+        tbody.removeChild(tbody.firstChild);
+      }
+    }
+
+
+  </script>
+
+</body>
+
+</html>
